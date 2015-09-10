@@ -1,6 +1,6 @@
 {
   "name": "sunruse-influx-platforms-helpers",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "This is a collection of helper functions used when implementing platforms for SUNRUSE.influx.",
   "main": "deploy/index.js",
   "dependencies": {
@@ -17,8 +17,7 @@
   },
   "scripts": {
     "test": "grunt build test",
-    "prepublish": "grunt build test deploy",
-    "install": "grunt build test deploy"
+    "prepublish": "grunt build test deploy"
   },
   "files": ["deploy"],
   "repository": {
