@@ -5,21 +5,19 @@ describe "platforms", ->
 			beforeEach ->
 				makeUnary = require "./makeUnary"
 			describe "imports", ->
-				it "valueIsPrimitive", ->
-					expect(makeUnary.valueIsPrimitive).toBe require "./../../toolchain/valueIsPrimitive"
-				it "valuesEquivalent", ->
-					expect(makeUnary.valuesEquivalent).toBe require "./../../toolchain/valuesEquivalent"
+				it "toolchain", ->
+					expect(makeUnary.toolchain).toBe require "sunruse-influx-toolchain"
 			describe "on calling", ->
-				instance = valueIsPrimitive = valuesEquivalent = undefined
+				instance = toolchain = undefined
 				beforeEach ->
 					valueIsPrimitive = makeUnary.valueIsPrimitive
 					valuesEquivalent = makeUnary.valuesEquivalent
-					makeUnary.valueIsPrimitive = jasmine.createSpy()
-					makeUnary.valuesEquivalent = jasmine.createSpy()
+					makeUnary.toolchain = 
+						valueIsPrimitive: jasmine.createSpy()
+						valuesEquivalent: jasmine.createSpy()
 					instance = makeUnary "Test Name", "Test Input Type", "Test Output Type", ((input) -> if input is "Test Input Value" then "Test Output Value"), "Test GenerateCode"
 				afterEach ->
-					makeUnary.valueIsPrimitive = valueIsPrimitive
-					makeUnary.valuesEquivalent = valuesEquivalent					
+					makeUnary.toolchain = toolchain					
 				it "copies the name", ->
 					expect(instance.name).toEqual "Test Name"
 				it "copies the output type", ->
@@ -28,7 +26,7 @@ describe "platforms", ->
 					expect(instance.generateCode).toEqual "Test GenerateCode"
 				describe "inputsEqual", ->
 					it "defers to valuesEquivalent", ->
-						makeUnary.valuesEquivalent.and.callFake (platform, a, b) ->
+						makeUnary.toolchain.valuesEquivalent.and.callFake (platform, a, b) ->
 							expect(platform).toEqual "Test Platform"
 							expect(a).toEqual "Test Input A"
 							expect(b).toEqual "Test Input B"
@@ -39,7 +37,7 @@ describe "platforms", ->
 				describe "compile", ->
 					describe "when the input is not a primitive", ->
 						beforeEach ->
-							makeUnary.valueIsPrimitive.and.callFake (value, name) ->
+							makeUnary.toolchain.valueIsPrimitive.and.callFake (value, name) ->
 								expect(value).toEqual "Test Input Value"
 								expect(name).toEqual "Test Input Type"
 								false
@@ -49,7 +47,7 @@ describe "platforms", ->
 					describe "when the input is a primitive", ->
 						input = undefined
 						beforeEach ->
-							makeUnary.valueIsPrimitive.and.callFake (value, name) ->
+							makeUnary.toolchain.valueIsPrimitive.and.callFake (value, name) ->
 								expect(value).toBe input
 								expect(name).toEqual "Test Input Type"
 								true						

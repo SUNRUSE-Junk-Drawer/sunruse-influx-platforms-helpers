@@ -5,21 +5,18 @@ describe "platforms", ->
 			beforeEach ->
 				makeOrderedBinary = require "./makeOrderedBinary"
 			describe "imports", ->
-				it "valueIsPrimitive", ->
-					expect(makeOrderedBinary.valueIsPrimitive).toBe require "./../../toolchain/valueIsPrimitive"
-				it "valuesEquivalent", ->
-					expect(makeOrderedBinary.valuesEquivalent).toBe require "./../../toolchain/valuesEquivalent"
+				it "toolchain", ->
+					expect(makeOrderedBinary.toolchain).toBe require "sunruse-influx-toolchain"
 			describe "on calling", ->
-				instance = valueIsPrimitive = valuesEquivalent = undefined
+				instance = toolchain = undefined
 				beforeEach ->
-					valueIsPrimitive = makeOrderedBinary.valueIsPrimitive
-					valuesEquivalent = makeOrderedBinary.valuesEquivalent
-					makeOrderedBinary.valueIsPrimitive = jasmine.createSpy()
-					makeOrderedBinary.valuesEquivalent = jasmine.createSpy()
+					toolchain = makeOrderedBinary.toolchain
+					makeOrderedBinary.toolchain = 
+						valueIsPrimitive: jasmine.createSpy()
+						valuesEquivalent: jasmine.createSpy()
 					instance = makeOrderedBinary "Test Name", "Test Input Type", "Test Output Type", ((a, b) -> if a is "Test Input A" and b is "Test Input B" then "Test Output Value"), "Test GenerateCode"
 				afterEach ->
-					makeOrderedBinary.valueIsPrimitive = valueIsPrimitive
-					makeOrderedBinary.valuesEquivalent = valuesEquivalent					
+					makeOrderedBinary.toolchain = toolchain					
 				it "copies the name", ->
 					expect(instance.name).toEqual "Test Name"
 				it "copies the output type", ->
@@ -28,7 +25,7 @@ describe "platforms", ->
 					expect(instance.generateCode).toEqual "Test GenerateCode"
 				describe "inputsEqual", ->
 					it "defers to valuesEquivalent and returns true when properties in the operands match", ->
-						makeOrderedBinary.valuesEquivalent.and.callFake (platform, a, b) ->
+						makeOrderedBinary.toolchain.valuesEquivalent.and.callFake (platform, a, b) ->
 							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA"
@@ -50,7 +47,7 @@ describe "platforms", ->
 							.toBeTruthy()
 							
 					it "defers to valuesEquivalent and returns false when properties in the operands do not match", ->
-						makeOrderedBinary.valuesEquivalent.and.callFake (platform, a, b) ->
+						makeOrderedBinary.toolchain.valuesEquivalent.and.callFake (platform, a, b) ->
 							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA"
@@ -72,7 +69,7 @@ describe "platforms", ->
 							.toBeFalsy()
 														
 					it "defers to valuesEquivalent and returns false when only the first property pair matches", ->
-						makeOrderedBinary.valuesEquivalent.and.callFake (platform, a, b) ->
+						makeOrderedBinary.toolchain.valuesEquivalent.and.callFake (platform, a, b) ->
 							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA"
@@ -94,7 +91,7 @@ describe "platforms", ->
 							.toBeFalsy()
 							
 					it "defers to valuesEquivalent and returns false when only the second property pair matches", ->
-						makeOrderedBinary.valuesEquivalent.and.callFake (platform, a, b) ->
+						makeOrderedBinary.toolchain.valuesEquivalent.and.callFake (platform, a, b) ->
 							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA"
@@ -124,7 +121,7 @@ describe "platforms", ->
 					describe "when the input is a properties object", ->
 						describe "ignoring primitive type checks", ->
 							beforeEach ->
-								makeOrderedBinary.valueIsPrimitive.and.returnValue true
+								makeOrderedBinary.toolchain.valueIsPrimitive.and.returnValue true
 							describe "when neither property exists", ->
 								it "returns falsy", ->
 									expect instance.compile 
@@ -149,7 +146,7 @@ describe "platforms", ->
 						describe "when both properties are present", ->													
 							describe "when neither value is the correct primitive type", ->
 								it "returns falsy", ->
-									makeOrderedBinary.valueIsPrimitive.and.callFake (value, name) ->
+									makeOrderedBinary.toolchain.valueIsPrimitive.and.callFake (value, name) ->
 										expect(name).toEqual "Test Input Type"
 										switch value
 											when "Test Input A" then return false
@@ -165,7 +162,7 @@ describe "platforms", ->
 										.toBeFalsy()
 							describe "when only the first value is the correct primitive type", ->
 								it "returns falsy", ->
-									makeOrderedBinary.valueIsPrimitive.and.callFake (value, name) ->
+									makeOrderedBinary.toolchain.valueIsPrimitive.and.callFake (value, name) ->
 										expect(name).toEqual "Test Input Type"
 										switch value
 											when "Test Input A" then return true
@@ -181,7 +178,7 @@ describe "platforms", ->
 										.toBeFalsy()								
 							describe "when only the second value is the correct primitive type", ->
 								it "returns falsy", ->
-									makeOrderedBinary.valueIsPrimitive.and.callFake (value, name) ->
+									makeOrderedBinary.toolchain.valueIsPrimitive.and.callFake (value, name) ->
 										expect(name).toEqual "Test Input Type"
 										switch value
 											when "Test Input A" then return false
@@ -206,7 +203,7 @@ describe "platforms", ->
 											b:
 												score: 3
 											c: "Test Unneeded"
-									makeOrderedBinary.valueIsPrimitive.and.callFake (value, name) ->
+									makeOrderedBinary.toolchain.valueIsPrimitive.and.callFake (value, name) ->
 										expect(name).toEqual "Test Input Type"
 										switch value
 											when input.properties.a then return true

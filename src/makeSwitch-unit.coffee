@@ -5,33 +5,30 @@ describe "platforms", ->
 			beforeEach ->
 				makeSwitch = require "./makeSwitch"
 			describe "imports", ->
-				it "valueIsPrimitive", ->
-					expect(makeSwitch.valueIsPrimitive).toBe require "./../../toolchain/valueIsPrimitive"
-				it "valuesEquivalent", ->
-					expect(makeSwitch.valuesEquivalent).toBe require "./../../toolchain/valuesEquivalent"
+				it "toolchain", ->
+					expect(makeSwitch.toolchain).toBe require "sunruse-influx-toolchain"
 			describe "instance", ->
-				valueA = valueB = valueOn = valueIsPrimitive = valuesEquivalent = instance = undefined
+				valueA = valueB = valueOn = toolchain = instance = undefined
 				beforeEach ->
-					valueIsPrimitive = makeSwitch.valueIsPrimitive
-					valuesEquivalent = makeSwitch.valuesEquivalent
+					toolchain = makeSwitch.toolchain
 					valueA = "Test Input A"
 					valueB = "Test Input B"
 					valueOn = "Test Value On"
-					makeSwitch.valueIsPrimitive = (value, name) ->
-						switch value
-							when valueA
-								expect(name).toEqual "Test Primitive Type"
-								return true
-							when valueB
-								expect(name).toEqual "Test Primitive Type"
-								return true
-							when valueOn
-								expect(name).toEqual "bool"
-								return true
+					makeSwitch.toolchain = 
+						valueIsPrimitive: (value, name) ->
+							switch value
+								when valueA
+									expect(name).toEqual "Test Primitive Type"
+									return true
+								when valueB
+									expect(name).toEqual "Test Primitive Type"
+									return true
+								when valueOn
+									expect(name).toEqual "bool"
+									return true
 					instance = makeSwitch "Test Primitive Type", "Test Generate Code"
 				afterEach -> 
-					makeSwitch.valueIsPrimitive = valueIsPrimitive
-					makeSwitch.valuesEquivalent = valuesEquivalent
+					makeSwitch.toolchain = toolchain
 				it "sets a name of \"switch\"", ->
 					expect(instance.name).toEqual "switch"
 				it "sets the return type", ->
@@ -169,7 +166,7 @@ describe "platforms", ->
 										expect(result.native.input.properties.on).toBe input.properties.on
 				describe "inputsEqual", ->
 					beforeEach ->
-						makeSwitch.valuesEquivalent = (platform, a, b) ->
+						makeSwitch.toolchain.valuesEquivalent = (platform, a, b) ->
 							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA" then return b is "Test Input BA"
