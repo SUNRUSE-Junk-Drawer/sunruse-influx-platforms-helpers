@@ -324,6 +324,7 @@ describe "platforms", ->
 														properties:
 															a: jasmine.any Object
 															b: jasmine.any Object
+										expect(result.native.function).toBe instance
 										expect(result.native.input.properties.a).toBe input.properties.a
 										expect(result.native.input.properties.b).toBe input.properties.b									
 								describe "when only the second input is non-constant", ->
@@ -342,6 +343,7 @@ describe "platforms", ->
 														properties:
 															a: jasmine.any Object
 															b: jasmine.any Object
+										expect(result.native.function).toBe instance
 										expect(result.native.input.properties.a).toBe input.properties.a
 										expect(result.native.input.properties.b).toBe input.properties.b																			
 								describe "when both inputs are non-constant", ->
@@ -359,5 +361,6 @@ describe "platforms", ->
 														properties:
 															a: jasmine.any Object
 															b: jasmine.any Object
+										expect(result.native.function).toBe instance
 										expect(result.native.input.properties.a).toBe input.properties.a
 										expect(result.native.input.properties.b).toBe input.properties.b
