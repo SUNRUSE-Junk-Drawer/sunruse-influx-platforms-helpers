@@ -1,6 +1,6 @@
 {
   "name": "sunruse-influx-platforms-helpers",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is a collection of helper functions used when implementing platforms for SUNRUSE.influx.",
   "main": "deploy/index.js",
   "dependencies": {
