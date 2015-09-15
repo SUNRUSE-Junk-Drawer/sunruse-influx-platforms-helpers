@@ -8,7 +8,7 @@ module.exports = (name, inputType, outputType, forConstants, generateCode, field
 			if not value.properties then return null
 			if not value.properties[fieldNameA] or not value.properties[fieldNameB] then return null
 			if not module.exports.toolchain.valueIsPrimitive value.properties[fieldNameA], inputType then return null
-			if not module.exports.toolchain.valueIsPrimitive value.properties[fieldNameB, inputType then return null
+			if not module.exports.toolchain.valueIsPrimitive value.properties[fieldNameB], inputType then return null
 			if value.properties[fieldNameA].primitive and value.properties[fieldNameB].primitive
 				return unused =
 					score: value.properties[fieldNameA].score + value.properties[fieldNameB].score + 1
